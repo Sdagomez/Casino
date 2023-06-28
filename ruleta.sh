@@ -27,7 +27,6 @@ function helpPanel(){
   echo -e "\t${purpleColour}h) Mostrar este panel de ayuda${endColour}"
 }
 
-
 function martingala (){
   echo -e "\n[+]${greenColour} Vamos a jugar con la tecnica martingala${endColour}"
 }
