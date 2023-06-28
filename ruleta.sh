@@ -29,6 +29,7 @@ function helpPanel(){
 
 function martingala (){
   echo -e "\n[+]${greenColour} Vamos a jugar con la tecnica martingala${endColour}"
+
 }
 
 while getopts "m:t:h" arg; do
