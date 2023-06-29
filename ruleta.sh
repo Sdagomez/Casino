@@ -14,7 +14,7 @@ grayColour="\e[0;37m\033[1m"
 
 function ctrl_c(){
   echo -e "\n\n[!] Saliendo....\n"
-  exit 1
+  tput cnorm;  exit 1
 }
 
 # Ctrl+c
@@ -28,7 +28,21 @@ function helpPanel(){
 }
 
 function martingala (){
-  echo -e "\n[+]${greenColour} Vamos a jugar con la tecnica martingala${endColour}"
+  echo -e "\n${yellowColour}[+]${redColour} Dinero Actual: $money €${endColour}"
+  echo -ne "${yellowColour}[+]${blueColour} Cuanto dinero tienes pensado apostar? --> ${endColour}" && read initial_bed
+  echo -ne "${yellowColour}[+]${blueColour} ¿A què deseas apostar continuamente (par/impar)? ${endColour}" && read par_bed
+
+  
+  echo -e "\n${yellowColour}[+]${blueColour} Vamos a jugar con la cantidad inicial de $yellowColour $initial_bed${endColour}${blueColour} a $yellowColour$par_bed ${endColour}"
+
+  tput civis
+  while true; do
+    random_number="$(($RANDOM % 37))"
+    echo el numero ha salido $random_number
+    sleep 10
+  done
+
+  tput cnorm
 
 }
 
