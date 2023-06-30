@@ -37,7 +37,7 @@ function martingala (){
 
   backup_bed=$initial_bed
   play_counter=1
-  jugadas_malas="[ "
+  jugadas_malas=""
 
   tput civis
   while true; do
@@ -46,7 +46,7 @@ function martingala (){
     random_number="$(($RANDOM % 37))"
 #    echo -e "${yellowColour}[+]${blueColour} El nùmero que ha salido es: ${endColour}${yellowColour}$random_number${endColour}"
 
-    if [[ ! "$money" -le 0 ]]; then
+    if [[ ! "$money" -lt 0 ]]; then
       if [[ "$par_impar" == "par" ]]; then 
         if [[ "$(($random_number % 2))" -eq 0 ]]; then
           if [[ "$random_number" -eq 0 ]]; then
@@ -70,12 +70,28 @@ function martingala (){
           jugadas_malas+="$random_number "
 #          echo -e "${yellowColour}[+]${redColour} Ahora mismo te quedas en ${endColour}${yellowColour} $money €  ${endColour}"
         fi     
+      else
+        #es para numeros impares
+        if [[ "$(($random_number % 2))" -eq 1 ]]; then
+#            echo -e "${yellowColour}[+]${blueColour} EL nùmero es impar, Ganaste!!! ${endColour}"
+            reward=$(($initial_bed*2))
+#            echo -e "${yellowColour}[+]${purpleColour} Ganas un total de: ${endColour}${yellowColour} $reward € ${endColour}"
+            money=$(($money+$reward))
+#            echo -e "${yellowColour}[+]${blueColour} Tienes un total de: ${endColour}${yellowColour} $money € ${endColour}"
+            initial_bed=$backup_bed
+
+            jugadas_malas=""
+#            echo -e "${yellowColour}[+]${redColour} Ahora mismo te quedas en ${endColour}${yellowColour} $money €  ${endColour}"
+        else
+          initial_bed=$(($initial_bed*2))
+          jugadas_malas+="$random_number "
+        fi
       fi
     else
       echo -e "${yellowColour}[!]${redColour} Te has quedado sin dinero${endColour}\n"
-      echo -e "${yellowColour}[+]${grayColour} Han habido un total de: ${endColour}${yellowColour} $play_counter ${endColour}${grayColour} jugadas ${endColour}\n"
+      echo -e "${yellowColour}[+]${grayColour} Han habido un total de: ${endColour}${yellowColour} $((play_counter-1)) ${endColour}${grayColour} jugadas ${endColour}\n"
       echo -e "${yellowColour}[+]${grayColour} A continuaciòn se van a representar las malas jugadas consecutivas que han salido: ${endColour}\n"
-      echo -e "${bluewColour} $jugadas_malas ${endColour}\n"
+      echo -e "${bluewColour} [ $jugadas_malas] ${endColour}\n"
 
       tput cnorm;exit 0
     fi
