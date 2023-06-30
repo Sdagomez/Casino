@@ -30,9 +30,7 @@ function helpPanel(){
 function martingala (){
   echo -e "\n${yellowColour}[+]${yellowColour} Dinero Actual: $money €${endColour}"
   echo -ne "${yellowColour}[+]${blueColour} Cuanto dinero tienes pensado apostar? --> ${endColour}" && read initial_bed
-  echo -ne "${yellowColour}[+]${blueColour} ¿A què deseas apostar continuamente (par/impar)? ${endColour}" && read par_impar
-
-  
+  echo -ne "${yellowColour}[+]${blueColour} ¿A què deseas apostar continuamente (par/impar)? ${endColour}" && read par_impar  
   echo -e "\n${yellowColour}[+]${blueColour} Vamos a jugar con la cantidad inicial de $yellowColour $initial_bed${endColour}${blueColour} a $yellowColour$par_impar ${endColour}"
 
   backup_bed=$initial_bed
@@ -45,7 +43,6 @@ function martingala (){
 #    echo -e "\n${yellowColour}[+]${blueColour} Acabas de apostar ${yellowColour} $initial_bed € ${endColour}${blueColour} y tienes ${endColour}${yellowColour} $money € ${endColour}"
     random_number="$(($RANDOM % 37))"
 #    echo -e "${yellowColour}[+]${blueColour} El nùmero que ha salido es: ${endColour}${yellowColour}$random_number${endColour}"
-
     if [[ ! "$money" -lt 0 ]]; then
       if [[ "$par_impar" == "par" ]]; then 
         if [[ "$(($random_number % 2))" -eq 0 ]]; then
@@ -98,9 +95,7 @@ function martingala (){
 
     let play_counter+=1
   done
-
   tput cnorm
-
 }
 
 while getopts "m:t:h" arg; do
