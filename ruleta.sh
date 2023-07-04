@@ -98,6 +98,42 @@ function martingala (){
   tput cnorm
 }
 
+function inverseLabrouchere(){
+
+  echo -e "\n${yellowColour}[+]${yellowColour} Dinero Actual: $money €${endColour}"
+  echo -ne "${yellowColour}[+]${blueColour} ¿A què deseas apostar continuamente (par/impar)? ${endColour}" && read par_impar  
+
+  declare -a my_sequence=(1 2 3 4)
+
+  echo -e "\n${yellowColour}[+]${grayColour} Comenzamos con la secuencia ${endColour}${greenColour} [${my_sequence[@]}] ${endColour}"
+
+  bet=$((${my_sequence[0]} + ${my_sequence[-1]}))
+
+  unset my_sequence[0]
+  unset my_sequence[-1]
+
+  my_sequence=(${my_sequence[@]})
+
+  echo -e "\n${yellowColour}[+]${grayColour} Invertimos ${yellowColour}$bet€${endColour}${grayColour} y nuestra secuencia se queda en ${endColour}${greenColour}[${my_sequence[@]}] ${endColour}"
+
+  tput civis
+  while true; do
+    random_number=$(($RANDOM % 37))
+    echo -e "\n${yellowColour}[+]${yellowColour}${grayColour} Ha salido el nùmero: ${endColour}${yellowColour}$random_number${endColour}"
+
+    if [[ "$par_impar" == "par" ]]; then
+      if [[ "$(($random_number %2))" -eq 0 ]]; then
+        echo -e "${yellowColour}[+]${blueColour} EL nùmero es par, Ganaste!!! ${endColour}"
+      else
+        echo -e "${yellowColour}[+]${redColour} El nùmero es impar, Pierdes!!! ${endColour}"
+      fi
+    fi
+
+    sleep 10
+  done
+  tput cnorm
+}
+
 while getopts "m:t:h" arg; do
   case $arg in
     m)money="$OPTARG";;
@@ -109,6 +145,8 @@ done
 if [[ $money ]] && [[ $technique ]]; then
   if [[ "$technique" == "martingala" ]]; then
     martingala
+  elif [[ "$technique" == "inverseLabrouchere" ]]; then
+    inverseLabrouchere
   else
     echo -e "\n$redColour[!]${redColour} No existe ninguna tecnica con ese nombre ${endColour}\n"
   fi
