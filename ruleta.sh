@@ -109,21 +109,36 @@ function inverseLabrouchere(){
 
   bet=$((${my_sequence[0]} + ${my_sequence[-1]}))
 
-  unset my_sequence[0]
-  unset my_sequence[-1]
-
-  my_sequence=(${my_sequence[@]})
-
-  echo -e "\n${yellowColour}[+]${grayColour} Invertimos ${yellowColour}$bet€${endColour}${grayColour} y nuestra secuencia se queda en ${endColour}${greenColour}[${my_sequence[@]}] ${endColour}"
-
   tput civis
   while true; do
     random_number=$(($RANDOM % 37))
+    money=$(($money - $bet))
+    echo -e "\n${yellowColour}[+]${grayColour} Invertimos ${yellowColour}$bet€${endColour}"
+    echo -e "${yellowColour}[+]${yellowColour}${grayColour} Tenemos: ${endColour}${yellowColour}$money€${endColour}"
+
     echo -e "\n${yellowColour}[+]${yellowColour}${grayColour} Ha salido el nùmero: ${endColour}${yellowColour}$random_number${endColour}"
 
     if [[ "$par_impar" == "par" ]]; then
-      if [[ "$(($random_number %2))" -eq 0 ]]; then
+      if [[ "$(($random_number %2))" -eq 0 ]] && [[ "$random_number" -ne 0 ]] ; then
         echo -e "${yellowColour}[+]${blueColour} EL nùmero es par, Ganaste!!! ${endColour}"
+        reward=$(($bet*2))
+        let money+=$reward
+        echo -e "${yellowColour}[+]${yellowColour}${grayColour} Tienes: ${endColour}${yellowColour}$money€${endColour}"
+
+        my_sequence+=($bet)
+        my_Sequence=(${my_sequence[@]})
+        
+        echo "nuestra nueva secuencia es " ${my_sequence[@]}
+        
+        if [[ "${#my_sequence[@]}" -ne 1 ]]; then
+          bet=$((${my_sequence[0]} + ${my_sequence[-1]}))
+        elif [[ "${#my_sequence[@]}" -eq 1 ]]; then
+          bet=${my_sequence[0]}
+        fi
+
+
+      elif [[ "$random_number" -eq 0 ]]; then
+        echo -e "${yellowColour}[+]${redColour} El nùmero es cero, Pierdes!!! ${endColour}"
       else
         echo -e "${yellowColour}[+]${redColour} El nùmero es impar, Pierdes!!! ${endColour}"
       fi
