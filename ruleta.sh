@@ -113,58 +113,65 @@ function inverseLabrouchere(){
   while true; do
     random_number=$(($RANDOM % 37))
     money=$(($money - $bet))
-    echo -e "\n${yellowColour}[+]${grayColour} Invertimos ${yellowColour}$bet€${endColour}"
-    echo -e "${yellowColour}[+]${yellowColour}${grayColour} Tenemos: ${endColour}${yellowColour}$money€${endColour}"
+    if [[ ! "$money" -lt 0 ]]; then
+      echo -e "\n${yellowColour}[+]${grayColour} Invertimos ${yellowColour}$bet€${endColour}"
+      echo -e "${yellowColour}[+]${yellowColour}${grayColour} Tenemos: ${endColour}${yellowColour}$money€${endColour}"
 
-    echo -e "\n${yellowColour}[+]${yellowColour}${grayColour} Ha salido el nùmero: ${endColour}${yellowColour}$random_number${endColour}"
+      echo -e "\n${yellowColour}[+]${yellowColour}${grayColour} Ha salido el nùmero: ${endColour}${yellowColour}$random_number${endColour}"
 
-    if [[ "$par_impar" == "par" ]]; then
-      if [[ "$(($random_number %2))" -eq 0 ]] && [[ "$random_number" -ne 0 ]] ; then
-        echo -e "${yellowColour}[+]${blueColour} EL nùmero es par, Ganaste!!! ${endColour}"
-        reward=$(($bet*2))
-        let money+=$reward
-        echo -e "${yellowColour}[+]${yellowColour}${grayColour} Tienes: ${endColour}${yellowColour}$money€${endColour}"
+      if [[ "$par_impar" == "par" ]]; then
+        if [[ "$(($random_number %2))" -eq 0 ]] && [[ "$random_number" -ne 0 ]] ; then
+          echo -e "${yellowColour}[+]${blueColour} EL nùmero es par, Ganaste!!! ${endColour}"
+          reward=$(($bet*2))
+          let money+=$reward
+          echo -e "${yellowColour}[+]${yellowColour}${grayColour} Tienes: ${endColour}${yellowColour}$money€${endColour}"
 
-        my_sequence+=($bet)
-        my_Sequence=(${my_sequence[@]})
-        
-        echo "nuestra nueva secuencia es " ${my_sequence[@]}
-        
-        if [[ "${#my_sequence[@]}" -ne 1 ]] && [[ "${#my_sequence[@]}" -ne 0 ]]; then
-          bet=$((${my_sequence[0]} + ${my_sequence[-1]}))
-        elif [[ "${#my_sequence[@]}" -eq 1 ]]; then
-          bet=${my_sequence[0]}
-        else
-          echo -e "${yellowColour}[!]${redColour} Hemos perdido nuestra secuencia ${endColour}"
-          my_sequence=(1 2 3 4)
-          echo "Reestablecemos la secuencia a [${my_sequence[@]}]"
+          my_sequence+=($bet)
+          my_Sequence=(${my_sequence[@]})
+          
+          echo "nuestra nueva secuencia es " ${my_sequence[@]}
+          
+          if [[ "${#my_sequence[@]}" -ne 1 ]] && [[ "${#my_sequence[@]}" -ne 0 ]]; then
+            bet=$((${my_sequence[0]} + ${my_sequence[-1]}))
+          elif [[ "${#my_sequence[@]}" -eq 1 ]]; then
+            bet=${my_sequence[0]}
+          else
+            echo -e "${yellowColour}[!]${redColour} Hemos perdido nuestra secuencia ${endColour}"
+            my_sequence=(1 2 3 4)
+            echo "Reestablecemos la secuencia a [${my_sequence[@]}]"
+            bet=$((${my_sequence[0]} + ${my_sequence[-1]}))
+          fi
+
+        elif [[ "$((random_number % 2))" -eq 1 ]] || [[ "$random_number" -eq 0 ]] ; then
+          if [[ "$((random_number % 2))" -eq 1 ]]; then
+            echo -e "${yellowColour}[!]${redColour} El nùmero es impar, Pierdes!!! ${endColour}"
+          else
+            echo -e "${yellowColour}[!]${redColour} ha salido el nùmero 0, Pierdes!!! ${endColour}"
+          fi
+            unset my_sequence[0]
+            unset my_sequence[-1] 2>/dev/null
+
+          my_sequence=(${my_sequence[@]})
+
+          echo "La secuencia se nos queda de la siguiente forma  ${my_sequence[@]}"
+          if [[ "${#my_sequence[@]}" -ne 1 ]] && [[ "${#my_sequence[@]}" -ne 0 ]] ; then
+            bet=$((${my_sequence[0]} + ${my_sequence[-1]}))
+          elif [[ "${#my_sequence[@]}" -eq 1 ]]; then
+            bet=${my_sequence[0]}
+          else
+            echo -e "${yellowColour}[!]${redColour} Hemos perdido nuestra secuencia ${endColour}"
+            my_sequence=(1 2 3 4)
+            echo "Reestablecemos la secuencia a [${my_sequence[@]}]"
+            bet=$((${my_sequence[0]} + ${my_sequence[-1]}))
+          fi
         fi
-
-
-      elif [[ "$random_number" -eq 0 ]]; then
-        echo -e "${yellowColour}[!]${redColour} El nùmero es cero, Pierdes!!! ${endColour}"
-      else
-        echo -e "${yellowColour}[!]${redColour} El nùmero es impar, Pierdes!!! ${endColour}"
-
-      unset my_sequence[0]
-      unset my_sequence[-1] 2>/dev/null
-
-      my_sequence=(${my_sequence[@]})
-
-      echo "La secuencia se nos queda de la siguiente forma  ${my_sequence[@]}"
-      if [[ "${#my_sequence[@]}" -ne 1 ]] && [[ "${#my_sequence[@]}" -ne 0 ]] ; then
-        bet=$((${my_sequence[0]} + ${my_sequence[-1]}))
-      elif [[ "${#my_sequence[@]}" -eq 1 ]]; then
-        bet=${my_sequence[0]}
-      else
-        echo -e "${yellowColour}[!]${redColour} Hemos perdido nuestra secuencia ${endColour}"
-        my_sequence=(1 2 3 4)
-        echo "Reestablecemos la secuencia a [${my_sequence[@]}]"
       fi
-      fi
+    else
+      echo -e "${yellowColour}[!]${redColour} Te has quedado sin dinero${endColour}\n"
+      tput cnorm; exit 1
     fi
 
-    sleep 3
+    sleep 1
   done
   tput cnorm
 }
